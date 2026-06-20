@@ -42,3 +42,7 @@ class job(base):
     error_message = Column(
         String
     )
+    file_path = Column(
+        String,
+        nullable=False
+    )
