@@ -29,7 +29,17 @@ def save_transactions(
 
             anomaly_reason=row[
                 "anomaly_reason"
-            ]
+            ],
+
+            llm_category=row.get(
+                "llm_category"
+            ),
+
+            llm_raw_response=row.get(
+                "llm_raw_response"
+            ),
+
+            llm_failed=row.get( "llm_failed", False )
         )
 
         db.add(txn)

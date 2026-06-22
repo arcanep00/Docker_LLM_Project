@@ -18,7 +18,16 @@ from app.services.job_service import (
     update_job_status,
     update_row_counts
 )
+from app.services.llm_service import (
+    enrich_categories
+)
+from app.services.summary_service import (
+    generate_summary
+)
 
+from app.services.summary_service import (
+    save_summary
+)
 
 @celery.task
 def process_csv_job(job_id):
@@ -55,12 +64,41 @@ def process_csv_job(job_id):
             df
         )
 
+        try:
+
+
+            df = enrich_categories(
+                df
+            )
+
+
+        except Exception as e:
+
+
+            print(
+                f"LLM Failed: {e}"
+            )
+
+            df["llm_failed"] = True
+
+            df["llm_raw_response"] = ""
+
+
         save_transactions(
             db,
             job.id,
             df
         )
 
+        summary = (
+            generate_summary(df)
+        )
+
+        save_summary(
+            db,
+            job.id,
+            summary
+        )
         print(
             f"Processing Job {job_id}"
         )

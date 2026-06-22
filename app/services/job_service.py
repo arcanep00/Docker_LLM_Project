@@ -1,6 +1,6 @@
 from app.models.job import job
 from datetime import datetime
-from app.models.job import Job
+
 
 def create_job(db, filename, file_path):
     Job = job(
