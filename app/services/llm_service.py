@@ -14,18 +14,41 @@ import google.generativeai as genai
 
 from app.config import GEMINI_API_KEY
 
+MODEL_NAME = "gemini-1.5-flash"
 
-# Configure Gemini
-genai.configure(
-    api_key=GEMINI_API_KEY
-)
+_model = None
 
-model = genai.GenerativeModel(
-    "gemini-1.5-flash"
-)
+
+def get_model():
+    """Lazily configure and return the Gemini model.
+
+    Done lazily so the module can be imported (e.g. in tests or at
+    app startup) without a configured GEMINI_API_KEY.
+    """
+    global _model
+
+    if _model is None:
+        if not GEMINI_API_KEY:
+            raise RuntimeError(
+                "GEMINI_API_KEY is not configured"
+            )
+
+        genai.configure(
+            api_key=GEMINI_API_KEY
+        )
+
+        _model = genai.GenerativeModel(
+            MODEL_NAME
+        )
+
+    return _model
+
+
 def safe_gemini_call(prompt):
 
     last_error = None
+
+    model = get_model()
 
     for attempt in range(
         MAX_RETRIES

@@ -105,24 +105,35 @@ def generate_narrative(
         risk_level
     )
 
-    narrative = safe_gemini_call(
-        prompt
-    )
+    try:
+        narrative = safe_gemini_call(
+            prompt
+        )
+    except Exception as e:
+        # Degrade gracefully: the computed statistics are still valuable
+        # even when the LLM narrative cannot be generated.
+        print(f"Narrative generation failed: {e}")
+        narrative = (
+            f"Total INR spend {total_inr}, total USD spend {total_usd}. "
+            f"Top merchants: {top_merchants}. "
+            f"{anomaly_count} anomalies detected ({risk_level} risk). "
+            "AI narrative unavailable."
+        )
 
     return narrative
 
 def generate_summary(df):
-    total_inr = (
+    total_inr = float(
         calculate_total_inr(df)
     )
-    total_usd = (
+    total_usd = float(
         calculate_total_usd(df)
     )
 
-    top_merchants = (
-        get_top_merchants(df)
-    )
-    anomaly_count = (
+    top_merchants = [
+        str(m) for m in get_top_merchants(df)
+    ]
+    anomaly_count = int(
         get_anomaly_count(df)
     )
 
@@ -189,6 +200,17 @@ def save_summary(
     db.add(job_summary)
 
     db.commit()
+
+
+def get_summary_by_job(
+    db,
+    job_id
+):
+    return db.query(
+        JobSummary
+    ).filter(
+        JobSummary.job_id == job_id
+    ).first()
 
 
 

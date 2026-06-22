@@ -1,0 +1,11 @@
+txn_id,date,merchant,amount,currency,status,category,account_id
+t1,2024-01-01,Swiggy,INR 250.50,success,SUCCESS,Food,acc1
+t2,2024-01-02,Ola,INR 180.00,inr,success,Transport,acc1
+t3,2024-01-03,Amazon,INR 1500.00,INR,SUCCESS,,acc1
+t4,2024-01-04,Swiggy,5000.00,USD,SUCCESS,Food,acc1
+t5,2024-01-05,Netflix,499.00,INR,SUCCESS,,acc2
+t6,2024-01-06,IRCTC,850.00,INR,SUCCESS,Travel,acc2
+t7,2024-01-07,BigBasket,2200.00,INR,SUCCESS,,acc2
+t8,2024-01-08,Uber,320.00,INR,SUCCESS,Transport,acc2
+t9,2024-01-09,Zomato,640.00,INR,SUCCESS,Food,acc1
+t10,2024-01-10,Amazon,90000.00,INR,SUCCESS,Shopping,acc1

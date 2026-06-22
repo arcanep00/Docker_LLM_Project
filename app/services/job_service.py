@@ -19,10 +19,17 @@ def create_job(db, filename, file_path):
 def update_job_status(
         db,
         job,
-        status
+        status,
+        error_message=None
 ):
 
     job.status = status
+
+    if status in ("COMPLETED", "FAILED"):
+        job.completed_at = datetime.now()
+
+    if error_message is not None:
+        job.error_message = error_message
 
     db.commit()
 
@@ -36,10 +43,18 @@ def get_job_by_id(
 ):
 
     return db.query(
-        Job
+        job
     ).filter(
-        Job.id == job_id
+        job.id == job_id
     ).first()
+
+def list_jobs(db):
+
+    return db.query(
+        job
+    ).order_by(
+        job.id.desc()
+    ).all()
 
 def update_row_counts(
         db,

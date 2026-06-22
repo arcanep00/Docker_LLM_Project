@@ -8,3 +8,5 @@ REDIS_URL = os.getenv("REDIS_URL")
 GEMINI_API_KEY = os.getenv(
     "GEMINI_API_KEY"
 )
+
+UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")

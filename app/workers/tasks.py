@@ -33,6 +33,7 @@ from app.services.summary_service import (
 def process_csv_job(job_id):
 
     db = SessionLocal()
+    job = None
 
     try:
 
@@ -40,6 +41,11 @@ def process_csv_job(job_id):
             db,
             job_id
         )
+
+        if job is None:
+            raise ValueError(
+                f"Job {job_id} not found"
+            )
 
         update_job_status(
             db,
@@ -113,11 +119,13 @@ def process_csv_job(job_id):
 
     except Exception as e:
 
-        update_job_status(
-            db,
-            job,
-            "FAILED"
-        )
+        if job is not None:
+            update_job_status(
+                db,
+                job,
+                "FAILED",
+                error_message=str(e)
+            )
 
         print(
             f"Job {job_id} failed: {e}"

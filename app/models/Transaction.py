@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 from app.db.base import base
 
 class Transaction(base):
@@ -29,12 +30,12 @@ class Transaction(base):
 
     account_id = Column(String)
 
-    is_anamoly = Column(
+    is_anomaly = Column(
         Boolean,
         default=False
     )
 
-    anamoly_reason = Column(
+    anomaly_reason = Column(
         String
     )
 
@@ -49,5 +50,10 @@ class Transaction(base):
     llm_failed = Column(
         Boolean,
         default=False
+    )
+
+    job = relationship(
+        "job",
+        back_populates="transactions"
     )
 

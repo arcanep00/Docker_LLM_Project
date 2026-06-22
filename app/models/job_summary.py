@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
 from app.db.base import base
 
 class JobSummary(base):
@@ -28,7 +29,7 @@ class JobSummary(base):
         String
     )
 
-    anamoly_count = Column(
+    anomaly_count = Column(
         Integer
     )
 
@@ -38,4 +39,9 @@ class JobSummary(base):
 
     risk_level = Column(
         String
+    )
+
+    job = relationship(
+        "job",
+        back_populates="summary"
     )
